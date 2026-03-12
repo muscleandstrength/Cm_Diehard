@@ -25,7 +25,7 @@ class Cm_Diehard_Model_Backend_Proxy extends Cm_Diehard_Model_Backend_Abstract
      */
     public function flush()
     {
-        $this->_cleanCache(array(self::CACHE_TAG));
+        $this->_cleanCache([self::CACHE_TAG]);
     }
 
     /**
@@ -74,7 +74,7 @@ class Cm_Diehard_Model_Backend_Proxy extends Cm_Diehard_Model_Backend_Abstract
      */
     protected function _getCacheTags($tags)
     {
-        $saveTags = array();
+        $saveTags = [];
         foreach($tags as $tag) {
             $saveTags[] = self::PREFIX_TAG.strtoupper($tag);
         }
@@ -96,7 +96,7 @@ class Cm_Diehard_Model_Backend_Proxy extends Cm_Diehard_Model_Backend_Abstract
               $tags[$key] = $prefix.$value;
             }
             $ids = Mage::app()->getCache()->getIdsMatchingAnyTags($tags);
-            $urls = array();
+            $urls = [];
             foreach($ids as $id) {
               if ($url = Mage::app()->loadCache($id)) {
                 $urls[] = $url;

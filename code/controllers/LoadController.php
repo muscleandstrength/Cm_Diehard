@@ -17,14 +17,14 @@ class Cm_Diehard_LoadController extends Mage_Core_Controller_Front_Action
     protected function _getResponseObject()
     {
         // Disable caching mode temporarily
-        $helper = Mage::helper('diehard'); /* @var $helper Cm_Diehard_Helper_Data */
+        $helper = Mage::helper('diehard'); /** @var Cm_Diehard_Helper_Data $helper */
         $oldLifetime = $helper->getLifetime();
         $helper->setLifetime(FALSE);
 
-        $response = array(
-            'blocks' => array(),
-            'ignoreBlocks' => array(),
-        );
+        $response = [
+            'blocks' => [],
+            'ignoreBlocks' => [],
+        ];
 
         // Translate JSON params to top-level params
         if ($params = $this->getRequest()->getParam('json')) {
@@ -38,12 +38,13 @@ class Cm_Diehard_LoadController extends Mage_Core_Controller_Front_Action
         }
 
         // Add handles to layout
-        $handles = array(
+        $handles = [
             'DIEHARD_default',  // DEPRECATED!!
             'DIEHARD_'.$this->getRequest()->getParam('full_action_name'), // DEPRECATED!!
             'DIEHARD_DYNAMIC_default',
             'DIEHARD_DYNAMIC_'.$this->getRequest()->getParam('full_action_name')
-        );
+        ];
+
         $this->loadLayout($handles);
         $layout = $this->getLayout();
 
@@ -51,7 +52,7 @@ class Cm_Diehard_LoadController extends Mage_Core_Controller_Front_Action
         
         // Render all blocks contents
         if ($this->getRequest()->getParam('all_blocks')) {
-            foreach ($this->getLayout()->getAllBlocks() as $block) { /* @var $block Mage_Core_Block_Abstract */
+            foreach ($this->getLayout()->getAllBlocks() as $block) { /** @var Mage_Core_Block_Abstract $block */
             if (! in_array($block->getNameInLayout(), $ignoredBlocks)) {
                     $selector = $block->getDiehardSelector();
                     $response['blocks'][$selector] = $block->toHtml();
@@ -61,7 +62,7 @@ class Cm_Diehard_LoadController extends Mage_Core_Controller_Front_Action
 
         // When using Ajax the client can specify a subset of available blocks
         else {
-            $requestedBlockNames = $this->getRequest()->getParam('blocks', array());
+            $requestedBlockNames = $this->getRequest()->getParam('blocks', []);
             foreach ($requestedBlockNames as $selector => $requestedBlockName) {
                 if (! in_array($requestedBlockName, $ignoredBlocks)) {
                     $tmpBlock = $layout->getBlock($requestedBlockName);

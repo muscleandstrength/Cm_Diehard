@@ -46,8 +46,8 @@ class Cm_Diehard_Model_Observer
     public function controllerActionLayoutLoadBefore(Varien_Event_Observer $observer)
     {
         if ($this->helper()->isEnabled() && $this->helper()->getLifetime()) {
-            $layout = $observer->getEvent()->getLayout(); /* @var $layout Mage_Core_Model_Layout */
-            $handles = array();
+            $layout = $observer->getEvent()->getLayout(); /** @var Mage_Core_Model_Layout $layout */
+            $handles = [];
             foreach ($layout->getUpdate()->getHandles() as $handle) {
                 $handles[] = $handle;
                 if (preg_match('/^[a-z_]+$/', $handle)) {
@@ -66,14 +66,14 @@ class Cm_Diehard_Model_Observer
     public function httpResponseSendBefore(Varien_Event_Observer $observer)
     {
         if ($this->helper()->isEnabled() && ! Mage::registry('diehard_cache_hit')) {
-            $response = $observer->getResponse(); /* @var $response Mage_Core_Controller_Response_Http */
+            $response = $observer->getResponse(); /** @var Mage_Core_Controller_Response_Http $response */
             $fullActionName = $this->helper()->getFullActionName();
 
-            Mage::dispatchEvent('diehard_response_send_before_'.strtolower($this->helper()->getBackend()->getName()), array(
+            Mage::dispatchEvent('diehard_response_send_before_'.strtolower($this->helper()->getBackend()->getName()), [
               'response' => $response,
               'full_action_name' => $fullActionName,
               'lifetime' => $this->helper()->getLifetime(),
-            ));
+            ]);
 
             // Update ignored blocks cookie
             $ignored = $this->helper()->getIgnoredBlocks();

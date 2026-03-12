@@ -52,9 +52,9 @@ class Cm_Diehard_Model_Backend_Local extends Cm_Diehard_Model_Backend_Abstract
     protected static $_useCachedResponse = NULL;
     protected $_cache;
 
-    protected $_defaultBackendOptions = array(
+    protected $_defaultBackendOptions = [
         'file_name_prefix'          => 'diehard',
-    );
+    ];
 
     /**
      * Clear all cached pages
@@ -140,7 +140,7 @@ class Cm_Diehard_Model_Backend_Local extends Cm_Diehard_Model_Backend_Abstract
      * This method is called by Mage_Core_Model_Cache->processRequest()
      *
      * @param  string|bool $content
-     * @return bool
+     * @return string|bool
      */
     public function extractContent($content)
     {
@@ -161,7 +161,7 @@ class Cm_Diehard_Model_Backend_Local extends Cm_Diehard_Model_Backend_Abstract
             if (0 /* TODO optional events_enabled feature */) {
                 Mage::app()->loadAreaPart(Mage_Core_Model_App_Area::AREA_FRONTEND, Mage_Core_Model_App_Area::PART_CONFIG);
                 Mage::app()->loadAreaPart(Mage_Core_Model_App_Area::AREA_FRONTEND, Mage_Core_Model_App_Area::PART_EVENTS);
-                Mage::dispatchEvent('diehard_use_cached_response', array('backend' => $this));
+                Mage::dispatchEvent('diehard_use_cached_response', ['backend' => $this]);
             }
 
             if ($this->getUseCachedResponse()) {
@@ -200,7 +200,7 @@ class Cm_Diehard_Model_Backend_Local extends Cm_Diehard_Model_Backend_Abstract
 
                             // Flush cached portion (start session first)
                             $this->helper()->initApp();
-                            Mage::getSingleton('core/session', array('name' => $params['session_name']));
+                            Mage::getSingleton('core/session', ['name' => $params['session_name']]);
                             Mage::app()->getResponse()->setBody($first)->sendResponse();
                             if (ob_get_level()) {
                                 ob_flush();
@@ -318,7 +318,7 @@ class Cm_Diehard_Model_Backend_Local extends Cm_Diehard_Model_Backend_Abstract
                 Mage::app()->getConfig()->createDirIfNotExists($this->_defaultBackendOptions['cache_dir']);
                 $options = $cacheConfig->asArray();
                 if ( ! isset($options['backend_options'])) {
-                    $options['backend_options'] = array();
+                    $options['backend_options'] = [];
                 }
                 $options['backend_options'] = array_merge($this->_defaultBackendOptions, $options['backend_options']);
                 $this->_cache = Mage::getModel('core/cache', $options);

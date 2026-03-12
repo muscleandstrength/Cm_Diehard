@@ -21,7 +21,7 @@ class Cm_Diehard_Block_Beforebodyend extends Mage_Core_Block_Template
      */
     public function getDynamicParamsCombined()
     {
-        $params = array();
+        $params = [];
         $params['full_action_name'] = $this->getAction()->getFullActionName();
         $params['blocks'] = $this->diehard()->getDynamicBlocks();
         $params['params'] = $this->diehard()->getDynamicParams();
@@ -41,7 +41,7 @@ class Cm_Diehard_Block_Beforebodyend extends Mage_Core_Block_Template
      */
     public function getLoadAjaxUrl()
     {
-        $params = array();
+        $params = [];
         if (Mage::app()->getStore()->isCurrentlySecure()) {
             $params['_secure'] = TRUE;
         }
@@ -53,7 +53,7 @@ class Cm_Diehard_Block_Beforebodyend extends Mage_Core_Block_Template
      */
     public function getLoadEsiUrl()
     {
-        $params = array();
+        $params = [];
         if (Mage::app()->getStore()->isCurrentlySecure()) {
             $params['_secure'] = TRUE;
         }

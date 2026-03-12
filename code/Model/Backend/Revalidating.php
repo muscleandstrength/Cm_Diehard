@@ -123,6 +123,7 @@ class Cm_Diehard_Model_Backend_Revalidating extends Cm_Diehard_Model_Backend_Abs
     public function extractContent($content)
     {
         $hit = FALSE;
+        $fullActionName = null;
 
         // Use ETags if given
         if (
