@@ -22,17 +22,17 @@ class Cm_Diehard_Helper_Data extends Mage_Core_Helper_Abstract
 
     protected $_lifetime = FALSE;
 
-    protected $_tags = array();
+    protected $_tags = [];
 
-    protected $_blocks = array();
+    protected $_blocks = [];
 
-    protected $_defaultIgnoredBlocks = array();
+    protected $_defaultIgnoredBlocks = [];
 
-    protected $_addedIgnoredBlocks = array();
+    protected $_addedIgnoredBlocks = [];
 
-    protected $_removedIgnoredBlocks = array();
+    protected $_removedIgnoredBlocks = [];
 
-    protected $_params = array();
+    protected $_params = [];
 
     /**
      * @return bool
@@ -76,7 +76,7 @@ class Cm_Diehard_Helper_Data extends Mage_Core_Helper_Abstract
     }
 
     /**
-     * @return string
+     * @return string|null
      */
     public function getFullActionName()
     {
@@ -220,7 +220,7 @@ class Cm_Diehard_Helper_Data extends Mage_Core_Helper_Abstract
     {
         $ignoredBlocks = Mage::getSingleton('core/cookie')->get(self::COOKIE_IGNORED_BLOCKS);
         if ($ignoredBlocks == '-') {
-          return array();
+          return [];
         }
         return ($ignoredBlocks === FALSE ? NULL : explode(',', $ignoredBlocks));
     }
@@ -278,7 +278,7 @@ class Cm_Diehard_Helper_Data extends Mage_Core_Helper_Abstract
         $ignored = array_diff($ignored, $this->_removedIgnoredBlocks);
         $blocks = array_diff($blocks, $ignored);
 
-        $observedBlocks = array();
+        $observedBlocks = [];
         foreach($this->getDynamicBlocks() as $htmlId => $nameInLayout) {
             if (in_array($nameInLayout, $blocks)) {
                 $observedBlocks[$htmlId] = $nameInLayout;
@@ -351,7 +351,9 @@ class Cm_Diehard_Helper_Data extends Mage_Core_Helper_Abstract
      */
     public function getBackend()
     {
-        return Mage::getSingleton($this->getBackendModel());
+        /** @var Cm_Diehard_Model_Backend_Abstract $backendModel */
+        $backendModel = Mage::getSingleton($this->getBackendModel());
+        return $backendModel;
     }
 
     /**
@@ -367,7 +369,7 @@ class Cm_Diehard_Helper_Data extends Mage_Core_Helper_Abstract
      */
     public function useAjax()
     {
-        return $this->getBackend()->useAjax() && $this->getJsLib();
+        return $this->getBackend()->useAjax() && $this->getJslib();
     }
 
     /**
@@ -375,7 +377,7 @@ class Cm_Diehard_Helper_Data extends Mage_Core_Helper_Abstract
      */
     public function useEsi()
     {
-        return $this->getBackend()->useEsi() && $this->getJsLib();
+        return $this->getBackend()->useEsi() && $this->getJslib();
     }
 
     /**
@@ -383,7 +385,7 @@ class Cm_Diehard_Helper_Data extends Mage_Core_Helper_Abstract
      */
     public function useJs()
     {
-        return $this->getBackend()->useJs() && $this->getJsLib();
+        return $this->getBackend()->useJs() && $this->getJslib();
     }
 
     /**
@@ -425,22 +427,22 @@ class Cm_Diehard_Helper_Data extends Mage_Core_Helper_Abstract
             }
             if ( ! $cookieConfig) {
                 $this->initApp();
-                $cookie = Mage::getSingleton('core/cookie'); /* @var $cookie Mage_Core_Model_Cookie */
-                $cookieConfig = array(
+                $cookie = Mage::getSingleton('core/cookie'); /** @var Mage_Core_Model_Cookie $cookie */
+                $cookieConfig = [
                     'period' => $cookie->getLifetime(),
                     'path'   => $cookie->getPath(),
                     'domain' => $cookie->getDomain(),
                     'admin'  => Mage::app()->getStore()->isAdmin(),
                     'httponly' => $cookie->getHttponly(),
-                );
-                Mage::app()->saveCache(serialize($cookieConfig), $cacheKey, array(Mage_Core_Model_Config::CACHE_TAG));
+                ];
+                Mage::app()->saveCache(serialize($cookieConfig), $cacheKey, [Mage_Core_Model_Config::CACHE_TAG]);
             }
             extract($cookieConfig);
-            /* @var $period int */
-            /* @var $path string */
-            /* @var $domain string */
-            /* @var $admin bool */
-            /* @var $httponly bool */
+            /** @var int $period */
+            /** @var string $path */
+            /** @var string $domain */
+            /** @var bool $admin */
+            /** @var bool $httponly */
             $expire = $period == 0 ? 0 : time() + $period;
             $secure = $admin && isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on';
             setcookie($name, $value, $expire, $path, $domain, $secure, $httponly);
