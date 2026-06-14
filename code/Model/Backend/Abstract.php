@@ -73,12 +73,14 @@ abstract class Cm_Diehard_Model_Backend_Abstract
             // getStore() is not yet available this early in processRequest(), so key on the
             // run-store cookie that selects the store. Essential where store views share a
             // hostname (e.g. all stores on one local/staging host); harmless in production
-            // (per-store hostnames). The ___store switch param is also covered via
-            // getRequestUri(). Some installs rename the run-store cookie (e.g. the OpenMage
-            // App override to '___store'); honour that name when present, else the default.
+            // (per-store hostnames). Some installs rename the run-store cookie (e.g. the
+            // OpenMage App override to '___store'); honour that name when present.
             $storeCookieName = defined('Mage_Core_Model_App::COOKIE_NAME')
                 ? Mage_Core_Model_App::COOKIE_NAME
                 : Mage_Core_Model_Store::COOKIE_NAME;
+            // Include the query string explicitly: behind some front controllers (nginx +
+            // .html rewrites) getRequestUri() returns the path only, so query variants
+            // (?p=2, ?___store=…, etc.) would otherwise collide with the clean URL entry.
             self::$_cacheKey = strtoupper(implode('_', [
                 'DIEHARD',
                 $this->_name,
@@ -86,6 +88,7 @@ abstract class Cm_Diehard_Model_Backend_Abstract
                 $request->getScheme(),
                 $request->getHttpHost(FALSE),
                 $request->getRequestUri(),
+                $request->getServer('QUERY_STRING', ''),
                 $request->getCookie(Cm_Diehard_Helper_Data::COOKIE_CACHE_KEY_DATA, '')
                 // Design?
             ]));
