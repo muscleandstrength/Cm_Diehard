@@ -64,8 +64,12 @@
 
             <!-- Supported javascript libraries for dynamic block replacement -->
             <jslibs>
+                <native>
+                    <label>Native (DOM/fetch, no Prototype) (default)</label>
+                    <path>diehard/fpc.js</path>
+                </native>
                 <prototype>
-                    <label>Prototype (default)</label>
+                    <label>Prototype (legacy)</label>
                     <path>diehard/fpc-prototype.js</path>
                 </prototype>
                 <!-- Not currently implemented
