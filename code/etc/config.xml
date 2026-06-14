@@ -176,7 +176,7 @@
         <system>
             <diehard>
                 <usejs>1</usejs>
-                <jslib>diehard/fpc-prototype.js</jslib>
+                <jslib>diehard/fpc.js</jslib>
             </diehard>
         </system>
         <dev>
