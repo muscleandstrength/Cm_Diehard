@@ -69,14 +69,20 @@ abstract class Cm_Diehard_Model_Backend_Abstract
     public function getCacheKey()
     {
         if ( ! self::$_cacheKey) {
+            $request = Mage::app()->getRequest();
             self::$_cacheKey = strtoupper(implode('_', [
                 'DIEHARD',
                 $this->_name,
-                // Mage::app()->getStore()->getId(), // Can't be used before init
-                Mage::app()->getRequest()->getScheme(),
-                Mage::app()->getRequest()->getHttpHost(FALSE),
-                Mage::app()->getRequest()->getRequestUri(),
-                Mage::app()->getRequest()->getCookie(Cm_Diehard_Helper_Data::COOKIE_CACHE_KEY_DATA, '')
+                // getStore() is not yet available this early in processRequest(), so key
+                // on the `store` run-cookie that selects the store. Essential where store
+                // views share a hostname (e.g. all stores on one local/staging host);
+                // harmless in production (per-store hostnames). The ___store switch param
+                // is already covered via getRequestUri().
+                $request->getCookie(Mage_Core_Model_Store::COOKIE_NAME, ''),
+                $request->getScheme(),
+                $request->getHttpHost(FALSE),
+                $request->getRequestUri(),
+                $request->getCookie(Cm_Diehard_Helper_Data::COOKIE_CACHE_KEY_DATA, '')
                 // Design?
             ]));
         }
