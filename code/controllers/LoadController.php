@@ -29,12 +29,16 @@ class Cm_Diehard_LoadController extends Mage_Core_Controller_Front_Action
         // Translate JSON params to top-level params
         if ($params = $this->getRequest()->getParam('json')) {
             $params = json_decode($params, TRUE);
-            $this->getRequest()->setParams($params);
+            if (is_array($params)) {
+                $this->getRequest()->setParams($params);
+            }
         }
 
         // Translate "params" to top-level params
         if ($params = $this->getRequest()->getParam('params')) {
-            $this->getRequest()->setParams($params);
+            if (is_array($params)) {
+                $this->getRequest()->setParams($params);
+            }
         }
 
         // Add handles to layout
@@ -53,7 +57,7 @@ class Cm_Diehard_LoadController extends Mage_Core_Controller_Front_Action
         // Render all blocks contents
         if ($this->getRequest()->getParam('all_blocks')) {
             foreach ($this->getLayout()->getAllBlocks() as $block) { /** @var Mage_Core_Block_Abstract $block */
-            if (! in_array($block->getNameInLayout(), $ignoredBlocks)) {
+                if (! in_array($block->getNameInLayout(), $ignoredBlocks)) {
                     $selector = $block->getDiehardSelector();
                     $response['blocks'][$selector] = $block->toHtml();
                 }
@@ -63,6 +67,9 @@ class Cm_Diehard_LoadController extends Mage_Core_Controller_Front_Action
         // When using Ajax the client can specify a subset of available blocks
         else {
             $requestedBlockNames = $this->getRequest()->getParam('blocks', []);
+            if (! is_array($requestedBlockNames)) {
+                $requestedBlockNames = [];
+            }
             foreach ($requestedBlockNames as $selector => $requestedBlockName) {
                 if (! in_array($requestedBlockName, $ignoredBlocks)) {
                     $tmpBlock = $layout->getBlock($requestedBlockName);

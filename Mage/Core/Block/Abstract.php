@@ -936,12 +936,8 @@ abstract class Mage_Core_Block_Abstract extends Varien_Object
 
         /* START: Added by Cm_Diehard */
         // if setBlockIsDynamic and setSuppressOutput then we automatically render only a placeholder tag.
-        if ($this->getBlockIsDynamic() && Mage::registry('diehard_lifetime')) {
-            if ($this->getSuppressOutput()) {
-                return '<div id="'.substr($this->getDiehardSelector(),1).'"></div>';
-            } else if (FALSE /* TODO - backend uses inline replacement */) {
-                return '<!-- DIEHARD_BLOCK|'.$this->getDiehardSelector().'|'.json_encode($this->getCacheKeyInfo()).' -->';
-            }
+        if ($this->getBlockIsDynamic() && Mage::registry('diehard_lifetime') && $this->getSuppressOutput()) {
+            return '<div id="'.substr($this->getDiehardSelector(),1).'"></div>';
         }
         /* END: Added by Cm_Diehard */
 
@@ -1573,8 +1569,6 @@ abstract class Mage_Core_Block_Abstract extends Varien_Object
             $this->_getSidPlaceholder($cacheKey),
             $data,
         );
-
-        // Changed by Cm_Direhard $tags = $this->getCacheTags();
 
         $this->_getApp()->saveCache($data, $cacheKey, $tags, $this->getCacheLifetime());
         $this->_getApp()->saveCache(
