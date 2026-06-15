@@ -143,8 +143,7 @@
                 </observers>
             </http_response_send_before>
 
-            <!-- Collect all loaded cache tags to associate with page -->
-            <!-- DISABLED
+            <!-- Collect all loaded cache tags to associate with page (self-gates on getLifetime()) -->
             <model_load_after>
                 <observers>
                     <diehard>
@@ -154,7 +153,6 @@
                     </diehard>
                 </observers>
             </model_load_after>
-            -->
         </events>
 
         <diehard>
